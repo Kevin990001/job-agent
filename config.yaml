@@ -1,0 +1,92 @@
+# ── Candidate profile ──────────────────────────────────────────────────────────
+candidate:
+  name: "Chi Gong"
+  email: "gongchineu@gmail.com"        # destination for digest email
+  years_experience: 1
+  current_role: "Software Engineer, Walmart Supply Chain Technology"
+  skills:
+    - Python
+    - Java
+    - Scala
+    - TypeScript
+    - JavaScript
+    - React
+    - Kafka
+    - Spark
+    - SQL
+    - AWS
+    - GCP
+    - Kubernetes
+    - Docker
+    - Airflow
+    - Flink
+  resume_summary: |
+    1-year software engineer at Walmart Supply Chain Technology building
+    distributed data pipelines and Gen-AI agents. Delivered a 3.5%
+    improvement in delivery date accuracy, automated 40+ hours/week of
+    manual operations, and built seller integrations for 8+ partners.
+    Tech stack: Python, Java, Scala, TypeScript/React, Kafka, Spark, SQL,
+    AWS, GCP. Strong in backend systems, data engineering, and ML platform
+    work. Seeking mid-level SWE or data engineer roles at US tech companies.
+
+# ── Scoring ────────────────────────────────────────────────────────────────────
+scoring:
+  min_score_to_include: 5          # 1-10; jobs below this are dropped
+  tiers:
+    hot: 24                        # hours — "Posted in last 24h"
+    recent: 48                     # hours — "Posted in last 2 days"
+    fresh: 168                     # hours — "Posted this week"
+
+# ── JSearch (LinkedIn via RapidAPI) ───────────────────────────────────────────
+jsearch:
+  queries:
+    - "software engineer"
+    - "backend engineer"
+    - "data engineer"
+  location: "United States"
+  employment_types: "FULLTIME"
+  date_posted: "week"              # today | 3days | week | month
+  num_pages: 2                     # 10 results/page; 2 queries × 2 pages = ~40 results
+
+# ── Greenhouse (public API, no auth) ──────────────────────────────────────────
+# All slugs verified 2026-05-13
+greenhouse:
+  companies:
+    - stripe
+    - airbnb
+    - databricks
+    - figma
+    - vercel
+    - anthropic
+    - scaleai
+    - pinterest
+    - lyft
+    - discord
+    - robinhood
+    - asana
+    - hubspot
+    - gitlab
+    - twilio
+    - gusto
+    - mongodb
+    - elastic
+    - dropbox
+    - klaviyo
+    - mixpanel
+    - amplitude
+    - imbue
+
+# ── Lever (public API, no auth) ───────────────────────────────────────────────
+# All slugs verified 2026-05-13
+lever:
+  companies:
+    - netflix
+    - plaid
+    - wealthfront
+
+# ── Email ──────────────────────────────────────────────────────────────────────
+email:
+  from: "Job Agent <onboarding@resend.dev>"   # replace with your verified Resend sender
+  to: "gongchineu@gmail.com"
+  subject_prefix: "Daily Job Digest"
+  max_jobs_per_tier: 5             # cap per tier in the email to avoid long digests

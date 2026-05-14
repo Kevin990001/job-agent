@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Job Digest</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #1a1a2e; }
+    .container { max-width: 680px; margin: 0 auto; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px 32px; border-radius: 12px 12px 0 0; }
+    .header h1 { margin: 0 0 6px; font-size: 22px; font-weight: 700; }
+    .header p { margin: 0; font-size: 14px; opacity: 0.85; }
+    .stats { background: white; padding: 14px 32px; border-bottom: 1px solid #e8ecf0; display: flex; gap: 24px; }
+    .stat { font-size: 13px; color: #666; }
+    .stat strong { color: #1a1a2e; }
+    .section { background: white; margin-top: 16px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .section-header { padding: 14px 24px; font-size: 14px; font-weight: 700; letter-spacing: 0.3px; }
+    .tier-hot    .section-header { background: #fff3e0; color: #e65100; border-bottom: 2px solid #ff9800; }
+    .tier-recent .section-header { background: #e8f5e9; color: #1b5e20; border-bottom: 2px solid #4caf50; }
+    .tier-fresh  .section-header { background: #e3f2fd; color: #0d47a1; border-bottom: 2px solid #2196f3; }
+    .job-card { padding: 18px 24px; border-bottom: 1px solid #f0f2f5; }
+    .job-card:last-child { border-bottom: none; }
+    .job-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .job-title { font-size: 16px; font-weight: 600; color: #1a1a2e; margin: 0 0 2px; }
+    .job-meta { font-size: 13px; color: #666; margin: 0 0 8px; }
+    .badge-remote { background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+    .score-badge { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .score-green  { background: #43a047; }
+    .score-yellow { background: #ffa000; }
+    .score-orange { background: #e53935; }
+    .rationale { font-size: 13px; color: #444; line-height: 1.5; margin: 6px 0 10px; font-style: italic; }
+    .missing { margin: 0 0 12px; }
+    .missing-label { font-size: 12px; color: #999; margin-bottom: 4px; }
+    .chip { display: inline-block; background: #f0f2f5; color: #555; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 2px 3px 2px 0; }
+    .apply-btn { display: inline-block; background: #667eea; color: white; text-decoration: none; font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; }
+    .footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 24px; padding-bottom: 24px; }
+    .no-jobs { padding: 24px; text-align: center; color: #999; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Daily Job Digest</h1>
+    <p>{{ date }} &nbsp;·&nbsp; {{ total }} matching position{{ 's' if total != 1 else '' }} found</p>
+  </div>
+  <div class="stats">
+    {% for tier_key, label in [('hot', '🔥 Last 24h'), ('recent', '📅 Last 2 days'), ('fresh', '📬 This week')] %}
+    <div class="stat"><strong>{{ tiers[tier_key]|length if tiers[tier_key] else 0 }}</strong> {{ label }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Tiers -->
+  {% for tier_key, icon, label in [('hot', '🔥', 'Posted in the Last 24 Hours'), ('recent', '📅', 'Posted in the Last 2 Days'), ('fresh', '📬', 'Posted This Week')] %}
+  {% if tiers[tier_key] %}
+  <div class="section tier-{{ tier_key }}">
+    <div class="section-header">{{ icon }} {{ label }}</div>
+    {% for job in tiers[tier_key] %}
+    <div class="job-card">
+      <div class="job-top">
+        <div>
+          <div class="job-title">{{ job.title }}</div>
+          <div class="job-meta">
+            {{ job.company }}{% if job.location %} &nbsp;·&nbsp; {{ job.location }}{% endif %}
+            {% if job.remote %} &nbsp;<span class="badge-remote">Remote</span>{% endif %}
+          </div>
+        </div>
+        <div class="score-badge score-{{ 'green' if job.score >= 8 else ('yellow' if job.score >= 6 else 'orange') }}">
+          {{ job.score }}
+        </div>
+      </div>
+      {% if job.rationale %}
+      <div class="rationale">"{{ job.rationale }}"</div>
+      {% endif %}
+      {% if job.missing %}
+      <div class="missing">
+        <div class="missing-label">Skill gaps:</div>
+        {% for skill in job.missing %}<span class="chip">{{ skill }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      {% if job.url %}<a class="apply-btn" href="{{ job.url }}" target="_blank">Apply →</a>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <div class="footer">
+    Powered by Claude · Sourced from LinkedIn, Greenhouse, Lever<br/>
+    Unsubscribe by removing your email from config.yaml
+  </div>
+</div>
+</body>
+</html>
